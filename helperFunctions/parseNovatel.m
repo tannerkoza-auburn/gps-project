@@ -31,7 +31,7 @@ for n = 1:length(structure)
     
     gpsSec = structure{n}.Tags.GpsTime.GpsSeconds;
     
-    ephemOn = true;
+    ephemOn = false;
     prn = double(structure{n}.Ephemeris.Prn);
     if n == 1 && ephemOn
         rosSec = structure{n}.Header.Stamp.Sec;

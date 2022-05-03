@@ -31,16 +31,20 @@ for i = 1:numTopics
         case 'ros_sensor_msgs/GpsEphemerisTagged'
             for j = 1:numMes
                 % Message Time
-                out.gpsEphem(j).msgTimeS = msg{j}.Header.Stamp.Sec;
-                out.gpsEphem(j).msgTimeNS = msg{j}.Header.Stamp.Nsec;
-                out.gpsEphem(j).msgTime = out.gpsEphem(j).msgTimeS ...
-                    + (out.gpsEphem(j).msgTimeNS.*1e-9);
+                temp.gpsEphem(j).msgTimeS = msg{j}.Header.Stamp.Sec;
+                temp.gpsEphem(j).msgTimeNS = msg{j}.Header.Stamp.Nsec;
+                temp.gpsEphem(j).msgTime = temp.gpsEphem(j).msgTimeS ...
+                    + (temp.gpsEphem(j).msgTimeNS.*1e-9);
 
                 % GPS Ephemeris
-                out.gpsEphem(j).prn = msg{j}.Ephemeris.Prn;
-                out.gpsEphem(j).subframe1 = msg{j}.Ephemeris.Subframe1;
-                out.gpsEphem(j).subframe2 = msg{j}.Ephemeris.Subframe2;
-                out.gpsEphem(j).subframe3 = msg{j}.Ephemeris.Subframe3;
+                temp.gpsEphem(j).prn = msg{j}.Ephemeris.Prn;
+                temp.gpsEphem(j).subframe1 = msg{j}.Ephemeris.Subframe1;
+                temp.gpsEphem(j).subframe2 = msg{j}.Ephemeris.Subframe2;
+                temp.gpsEphem(j).subframe3 = msg{j}.Ephemeris.Subframe3;
+
+                % Decode Subframes
+                out.gpsEphem(j) = decodeEphem(temp.gpsEphem(j));
+
             end
 
         case 'ros_sensor_msgs/LlhPositionTagged'
@@ -59,30 +63,96 @@ for i = 1:numTopics
 
         case 'ros_sensor_msgs/RawMeasurementsTagged'
             for j = 1:numMes
+
                 % Message Time
                 out.gpsRawObs(j).msgTimeS = msg{j}.Header.Stamp.Sec;
                 out.gpsRawObs(j).msgTimeNS = msg{j}.Header.Stamp.Nsec;
                 out.gpsRawObs(j).msgTime = out.gpsRawObs(j).msgTimeS ...
                     + (out.gpsRawObs(j).msgTimeNS.*1e-9);
 
-                % GPS Raw Observables
-                out.gpsRawObs(j).prn = extractfield(msg{j}.Measurements,'Prn');
-                out.gpsRawObs(j).psr = extractfield(msg{j}.Measurements,'Pseudorange');
-                out.gpsRawObs(j).psr_variance = extractfield(msg{j}.Measurements,'PseudorangeVariance');
+                % Number of Pseudoranges
+                numPsr = length(msg{j}.Measurements);
 
-                for k = 1:length(out.gpsRawObs(j).prn)
-                    fields = fieldnames(msg{j}.Measurements(k).Frequency);
-                    type = msg{j}.Measurements(k).Frequency.Type;
+                % Frequency Counters
+                L1ctr = 1;
+                L2ctr = 1;
 
-                    out.gpsRawObs(j).frequencyType(k) = string(fields{type + 2});
+                for k = 1:numPsr
+
+                    fCarr = msg{j}.Measurements(k).Frequency.Type;
+
+                    if fCarr == 1
+
+                        % GPS Raw Observables
+                        out.gpsRawObs(j).L1.prn(L1ctr) = msg{j}.Measurements(k).Prn;
+                        out.gpsRawObs(j).L1.psr(L1ctr) = msg{j}.Measurements(k).Pseudorange;
+                        out.gpsRawObs(j).L1.psr_variance(L1ctr) = msg{j}.Measurements(k).PseudorangeVariance;
+                        out.gpsRawObs(j).L1.carr_phase(L1ctr) = msg{j}.Measurements(k).CarrierPhase;
+                        out.gpsRawObs(j).L1.carr_phase_variance(L1ctr) = msg{j}.Measurements(k).CarrierPhaseVariance;
+                        out.gpsRawObs(j).L1.dopp(L1ctr) = msg{j}.Measurements(k).Doppler;
+                        out.gpsRawObs(j).L1.dopp_variance(L1ctr) = msg{j}.Measurements(k).DopplerVariance;
+                        out.gpsRawObs(j).L1.cn0(L1ctr) = msg{j}.Measurements(k).CarrierToNoise;
+                        out.gpsRawObs(j).L1.loss_of_lock(L1ctr) = msg{j}.Measurements(k).LossOfLock;
+
+                        L1ctr = L1ctr + 1;
+
+                    elseif fCarr == 2
+
+                        % GPS Raw Observables
+                        out.gpsRawObs(j).L2.prn(L2ctr) = msg{j}.Measurements(k).Prn;
+                        out.gpsRawObs(j).L2.psr(L2ctr) = msg{j}.Measurements(k).Pseudorange;
+                        out.gpsRawObs(j).L2.psr_variance(L2ctr) = msg{j}.Measurements(k).PseudorangeVariance;
+                        out.gpsRawObs(j).L2.carr_phase(L2ctr) = msg{j}.Measurements(k).CarrierPhase;
+                        out.gpsRawObs(j).L2.carr_phase_variance(L2ctr) = msg{j}.Measurements(k).CarrierPhaseVariance;
+                        out.gpsRawObs(j).L2.dopp(L2ctr) = msg{j}.Measurements(k).Doppler;
+                        out.gpsRawObs(j).L2.dopp_variance(L2ctr) = msg{j}.Measurements(k).DopplerVariance;
+                        out.gpsRawObs(j).L2.cn0(L2ctr) = msg{j}.Measurements(k).CarrierToNoise;
+                        out.gpsRawObs(j).L2.loss_of_lock(L2ctr) = msg{j}.Measurements(k).LossOfLock;
+
+                        L2ctr = L2ctr + 1;
+
+                    else
+                        error("Novatel doesn't have L1 of L2!")
+                    end
                 end
 
-                out.gpsRawObs(j).carr_phase = extractfield(msg{j}.Measurements,'CarrierPhase');
-                out.gpsRawObs(j).carr_phase_variance = extractfield(msg{j}.Measurements,'CarrierPhaseVariance');
-                out.gpsRawObs(j).dopp = extractfield(msg{j}.Measurements,'Doppler');
-                out.gpsRawObs(j).dopp_variance = extractfield(msg{j}.Measurements,'DopplerVariance');
-                out.gpsRawObs(j).cn0 = extractfield(msg{j}.Measurements,'CarrierToNoise');
-                out.gpsRawObs(j).loss_of_lock = cell2mat(extractfield(msg{j}.Measurements,'LossOfLock'));
             end
+
+        case 'ros_sensor_msgs/SvStateTagged'
+
+            prnCtr = 1;  
+            epochCtr = 1; 
+            previousTimeStamp = [];
+            for ii = 1:numMes
+
+                currentTimeStamp = msg{ii}.Tags.GpsTime.GpsSeconds;
+                if ~isempty(previousTimeStamp)
+                    % Check for non-zero dt
+                    dt = currentTimeStamp - previousTimeStamp;
+
+                    if dt ~= 0
+                        % A new observation period has occured!!!
+                        epochCtr = epochCtr + 1;
+                        prnCtr = 1;
+
+                    end
+
+                end
+
+
+                out.gpsSV(epochCtr).gpsSec(prnCtr) = msg{ii}.Tags.GpsTime.GpsSeconds;
+                out.gpsSV(epochCtr).prn(prnCtr) = msg{ii}.SvState.Prn;
+                out.gpsSV(epochCtr).posX(prnCtr) = msg{ii}.SvState.Position.X;
+                out.gpsSV(epochCtr).posY(prnCtr) = msg{ii}.SvState.Position.Y;
+                out.gpsSV(epochCtr).posZ(prnCtr) = msg{ii}.SvState.Position.Z;
+                out.gpsSV(epochCtr).svClockCorr(prnCtr) = msg{ii}.SvState.SvClockCorrection;
+
+                % Finshing extracting information from current index...Lets update
+                previousTimeStamp = out.gpsSV(epochCtr).gpsSec(prnCtr);
+                prnCtr = prnCtr +1;
+
+            end
+
+
     end
 end

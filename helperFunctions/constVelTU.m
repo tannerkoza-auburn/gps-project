@@ -25,7 +25,7 @@ Phi = eye(8) + F*dt;
 X = Phi*Xin;
 
 % update covariance
-P = Phi*Pin*Phi.' + Q;
+P = Phi*Pin*Phi.' + Q*dt;
 
 end
 

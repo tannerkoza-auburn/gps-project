@@ -96,7 +96,6 @@ H(1:nMeas/2,7) = ones(nMeas/2,1);
 H(nMeas/2 + 1:end,4:6) = -unitVecs;
 H(nMeas/2 + 1:end,8) = ones(nMeas/2,1);
 
-
 end
 
 

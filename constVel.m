@@ -28,7 +28,7 @@ X(:,1) = [pos; vel; clkBias(1); clkDrift(1)];
 
 %% TUNING
 P(:,:,1) = est1.P;
-Q = .01*eye(8,8);
+Q = 100*eye(8,8);
 
 
 
@@ -43,7 +43,7 @@ for i = 1:length(RCVR1)
     SVpsr = RCVR1{i,1}.L1.psr;
     psrSigma = ones(length(SVpsr),1); % PLACE HOLDER
     SVdopp = RCVR1{i,1}.L1.dopp;
-    doppSigma = ones(length(SVdopp),1); % PLACE HOLDER
+    doppSigma = 10000000*ones(length(SVdopp),1); % PLACE HOLDER
     SVpos = RCVR1{i,1}.L1.svPos;
     SVvel = RCVR1{i,1}.L1.svVel;
     clkCorr = RCVR1{i}.L1.clkCorr;

@@ -1,4 +1,4 @@
-function [dZ,H, R] = TC_MeasModel(Xin, SVpsr, psrSigma, SVdopp, doppSigma, SVpos, SVvel)
+function [dZ,H, R] = TC_ErrStateMeasModel(oldStates, SVpsr, psrSigma, SVdopp, doppSigma, SVpos, SVvel)
 %{
     Take in available measurements and current state estimate to construct
     the measurement update components for a tightly-coupled integration.
@@ -17,7 +17,7 @@ function [dZ,H, R] = TC_MeasModel(Xin, SVpsr, psrSigma, SVdopp, doppSigma, SVpos
     - organizing the measurements as: [psr1 psr2 psr3... dopp1 dopp2 dopp3]
 
     Inputs:
-    - Xin: current state estimate (ECEF)
+    - oldStates: current state estimate (ECEF)
     - SVpsr: vector (n x 1) of pseudoranges
     - psrSigma: uncertainty in pseudoranges
     - SVdopp: vector (n x 1) of doppler measurements  ( !!! in HZ !!! )
@@ -44,10 +44,10 @@ e = 0.0818191908425; %WGS84 eccentricity
 Omega_ie = Skew([0; 0; omega_ie]);
 
 % extract states
-estPos = Xin(1:3);
-estVel = Xin(4:6);
-estClkBias = Xin(7);
-estClkDrift = Xin(8);
+estPos = oldStates.ECEF;
+estVel = oldStates.ECEFvel;
+estClkBias = oldStates.clkBias;
+estClkDrift = oldStates.clkDrift;
 
 % convert dopps from Hz to m/s
 L1_freq = 1575.42e6;
@@ -89,12 +89,12 @@ end
 
 % recall: organizing the measurements as: [psr1 psr2 psr3... dopp1 dopp2 dopp3]
 
-% --- construct state-to-measurement mapping matrix, H, using (9.163)
-H = zeros(nMeas,8);
-H(1:nMeas/2,1:3) = -unitVecs;
-H(1:nMeas/2,7) = ones(nMeas/2,1);
-H(nMeas/2 + 1:end,4:6) = -unitVecs;
-H(nMeas/2 + 1:end,8) = ones(nMeas/2,1);
+% --- construct state-to-measurement mapping matrix, H, using (14.126)
+H = zeros(nMeas,17);
+H(1:nMeas/2,7:9) = unitVecs;
+H(1:nMeas/2,16) = ones(nMeas/2,1);
+H(nMeas/2 + 1:end,4:6) = unitVecs;
+H(nMeas/2 + 1:end,17) = ones(nMeas/2,1);
 
 end
 

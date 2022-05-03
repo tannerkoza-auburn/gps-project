@@ -111,12 +111,12 @@ for n = 1:length(structure)
 %         out.Ephem_V2(ephemCount,:).reserved3 = binArray(1,121:144);
 %         out.Ephem_V2(ephemCount,:).reserved4 = binArray(1,145:160);
         
-        out.Ephem_V2(ephemCount,:).T_GD = twoscomp(binArray(1,161:168)) * 2^(-31);        
+        out.Ephem_V2(ephemCount,:).T_GD = twosComp2dec2dec(binArray(1,161:168)) * 2^(-31);        
         out.Ephem_V2(ephemCount,:).IODC = bin2dec([binArray(1,71:72) binArray(1,169:176)]);
         out.Ephem_V2(ephemCount,:).t_oc = bin2dec(binArray(1,177:192)) * 2^(4);
-        out.Ephem_V2(ephemCount,:).a_f2 = twoscomp(binArray(193:200)) * 2^(-55);
-        out.Ephem_V2(ephemCount,:).a_f1 = twoscomp(binArray(201:216)) * 2^(-43);
-        out.Ephem_V2(ephemCount,:).a_f0 = twoscomp(binArray(217:238)) * 2^(-31);
+        out.Ephem_V2(ephemCount,:).a_f2 = twosComp2dec(binArray(193:200)) * 2^(-55);
+        out.Ephem_V2(ephemCount,:).a_f1 = twosComp2dec(binArray(201:216)) * 2^(-43);
+        out.Ephem_V2(ephemCount,:).a_f0 = twosComp2dec(binArray(217:238)) * 2^(-31);
         
         out.Ephemeris(ephemCount,:).TOW = bin2dec(binArray(1,21:37))*4;
         out.Ephemeris(ephemCount,:).SubframeID = bin2dec(binArray(1,40:42));
@@ -124,12 +124,12 @@ for n = 1:length(structure)
         out.Ephemeris(ephemCount,:).weekNumber = bin2dec(binArray(1,49:58)) + 1024;
         out.Ephemeris(ephemCount,:).Accuracy = bin2dec(binArray(1,61:64));
         out.Ephemeris(ephemCount,:).health = bin2dec(binArray(1,65:70));
-        out.Ephemeris(ephemCount,:).T_GD = twoscomp(binArray(1,161:168)) * 2^(-31);
+        out.Ephemeris(ephemCount,:).T_GD = twosComp2dec(binArray(1,161:168)) * 2^(-31);
         out.Ephemeris(ephemCount,:).IODC = bin2dec([binArray(1,71:72) binArray(1,169:176)]);
-        out.Ephemeris(ephemCount,:).t_oc = bin2dec(binArray(1,177:192)) * 2^(4)
-        out.Ephemeris(ephemCount,:).a_f2 = twoscomp(binArray(193:200)) * 2^(-55);
-        out.Ephemeris(ephemCount,:).a_f1 = twoscomp(binArray(201:216)) * 2^(-43);
-        out.Ephemeris(ephemCount,:).a_f0 = twoscomp(binArray(217:238)) * 2^(-31);
+        out.Ephemeris(ephemCount,:).t_oc = bin2dec(binArray(1,177:192)) * 2^(4);
+        out.Ephemeris(ephemCount,:).a_f2 = twosComp2dec(binArray(193:200)) * 2^(-55);
+        out.Ephemeris(ephemCount,:).a_f1 = twosComp2dec(binArray(201:216)) * 2^(-43);
+        out.Ephemeris(ephemCount,:).a_f0 = twosComp2dec(binArray(217:238)) * 2^(-31);
         
 % q = quantizer([4 2]);
 % b = [binArray(217:238)];        
@@ -144,12 +144,12 @@ for n = 1:length(structure)
             sf2Bin(25,:) sf2Bin(26,:) sf2Bin(27,:) sf2Bin(28,:) sf2Bin(29,:) sf2Bin(30,:)];
         
         out.Ephemeris(ephemCount,:).IODE_sf2 = bin2dec(binArray(1,49:56));
-        out.Ephemeris(ephemCount,:).C_rs = twoscomp(binArray(1,57:72)) * 2^(-5);
-        out.Ephemeris(ephemCount,:).deltan = twoscomp(binArray(1,73:88)) * 2^(-43) * gpsPi;
-        out.Ephemeris(ephemCount,:).M_0 = twoscomp(binArray(1,89:120)) * 2^(-31) * gpsPi;
-        out.Ephemeris(ephemCount,:).C_uc = twoscomp(binArray(1,121:136)) * 2^(-29);
+        out.Ephemeris(ephemCount,:).C_rs = twosComp2dec(binArray(1,57:72)) * 2^(-5);
+        out.Ephemeris(ephemCount,:).deltan = twosComp2dec(binArray(1,73:88)) * 2^(-43) * gpsPi;
+        out.Ephemeris(ephemCount,:).M_0 = twosComp2dec(binArray(1,89:120)) * 2^(-31) * gpsPi;
+        out.Ephemeris(ephemCount,:).C_uc = twosComp2dec(binArray(1,121:136)) * 2^(-29);
         out.Ephemeris(ephemCount,:).e = bin2dec(binArray(1,137:168)) * 2^(-33);
-        out.Ephemeris(ephemCount,:).C_us = twoscomp(binArray(1,169:184)) * 2^(-29);
+        out.Ephemeris(ephemCount,:).C_us = twosComp2dec(binArray(1,169:184)) * 2^(-29);
         out.Ephemeris(ephemCount,:).sqrtA = bin2dec(binArray(1,185:216)) * 2^(-19);
         out.Ephemeris(ephemCount,:).t_oe = bin2dec(binArray(1,217:232)) * 2^(4);
         
@@ -162,15 +162,15 @@ for n = 1:length(structure)
             sf3Bin(19,:) sf3Bin(20,:) sf3Bin(21,:) sf3Bin(22,:) sf3Bin(23,:) sf3Bin(24,:) ...
             sf3Bin(25,:) sf3Bin(26,:) sf3Bin(27,:) sf3Bin(28,:) sf3Bin(29,:) sf3Bin(30,:)];
         
-        out.Ephemeris(ephemCount,:).C_ic = twoscomp(binArray(1,49:64)) * 2^(-29);
-        out.Ephemeris(ephemCount,:).omega_0 = twoscomp(binArray(1,65:96)) * 2^(-31) * gpsPi;
-        out.Ephemeris(ephemCount,:).C_is = twoscomp(binArray(1,97:112)) * 2^(-29);
-        out.Ephemeris(ephemCount,:).i_0 = twoscomp(binArray(1,113:144)) * 2^(-31) * gpsPi;
-        out.Ephemeris(ephemCount,:).C_rc = twoscomp(binArray(1,145:160)) * 2^(-5);
-        out.Ephemeris(ephemCount,:).omega = twoscomp(binArray(1,161:192)) * 2^(-31) * gpsPi;
-        out.Ephemeris(ephemCount,:).omegaDot = twoscomp(binArray(1,193:216)) * 2^(-43) * gpsPi;
+        out.Ephemeris(ephemCount,:).C_ic = twosComp2dec(binArray(1,49:64)) * 2^(-29);
+        out.Ephemeris(ephemCount,:).omega_0 = twosComp2dec(binArray(1,65:96)) * 2^(-31) * gpsPi;
+        out.Ephemeris(ephemCount,:).C_is = twosComp2dec(binArray(1,97:112)) * 2^(-29);
+        out.Ephemeris(ephemCount,:).i_0 = twosComp2dec(binArray(1,113:144)) * 2^(-31) * gpsPi;
+        out.Ephemeris(ephemCount,:).C_rc = twosComp2dec(binArray(1,145:160)) * 2^(-5);
+        out.Ephemeris(ephemCount,:).omega = twosComp2dec(binArray(1,161:192)) * 2^(-31) * gpsPi;
+        out.Ephemeris(ephemCount,:).omegaDot = twosComp2dec(binArray(1,193:216)) * 2^(-43) * gpsPi;
         out.Ephemeris(ephemCount,:).IODE_sf3 = bin2dec(binArray(1,217:224));
-        out.Ephemeris(ephemCount,:).iDot = twoscomp(binArray(1,225:238)) * 2^(-43) * gpsPi;
+        out.Ephemeris(ephemCount,:).iDot = twosComp2dec(binArray(1,225:238)) * 2^(-43) * gpsPi;
               
         prnSaved(1) = prn;
         ephemCount = ephemCount + 1;
@@ -202,12 +202,12 @@ for n = 1:length(structure)
         out.Ephemeris(ephemCount,:).weekNumber = bin2dec(binArray(1,49:58)) + 1024;
         out.Ephemeris(ephemCount,:).Accuracy = bin2dec(binArray(1,61:64));
         out.Ephemeris(ephemCount,:).health = bin2dec(binArray(1,65:70));
-        out.Ephemeris(ephemCount,:).T_GD = twoscomp(binArray(1,161:168)) * 2^(-31);
+        out.Ephemeris(ephemCount,:).T_GD = twosComp2dec(binArray(1,161:168)) * 2^(-31);
         out.Ephemeris(ephemCount,:).IODC = bin2dec([binArray(1,71:72) binArray(1,169:176)]);
         out.Ephemeris(ephemCount,:).t_oc = bin2dec(binArray(1,177:192)) * 2^(4);
-        out.Ephemeris(ephemCount,:).a_f2 = twoscomp(binArray(193:200)) * 2^(-55);
-        out.Ephemeris(ephemCount,:).a_f1 = twoscomp(binArray(201:216)) * 2^(-43);
-        out.Ephemeris(ephemCount,:).a_f0 = twoscomp(binArray(217:238)) * 2^(-31);
+        out.Ephemeris(ephemCount,:).a_f2 = twosComp2dec(binArray(193:200)) * 2^(-55);
+        out.Ephemeris(ephemCount,:).a_f1 = twosComp2dec(binArray(201:216)) * 2^(-43);
+        out.Ephemeris(ephemCount,:).a_f0 = twosComp2dec(binArray(217:238)) * 2^(-31);
         
         %%%%%%%%%%%%%%%%%%% Subframe 2 %%%%%%%%%%%%%%%%%%%%%%%
         subframe2 = structure{n}.Ephemeris.Subframe2;
@@ -219,12 +219,12 @@ for n = 1:length(structure)
             sf2Bin(25,:) sf2Bin(26,:) sf2Bin(27,:) sf2Bin(28,:) sf2Bin(29,:) sf2Bin(30,:)];
         
         out.Ephemeris(ephemCount,:).IODE_sf2 = bin2dec(binArray(1,49:56));
-        out.Ephemeris(ephemCount,:).C_rs = twoscomp(binArray(1,57:72)) * 2^(-5);
-        out.Ephemeris(ephemCount,:).deltan = twoscomp(binArray(1,73:88)) * 2^(-43) * gpsPi;
-        out.Ephemeris(ephemCount,:).M_0 = twoscomp(binArray(1,89:120)) * 2^(-31) * gpsPi;
-        out.Ephemeris(ephemCount,:).C_uc = twoscomp(binArray(1,121:136)) * 2^(-29);
+        out.Ephemeris(ephemCount,:).C_rs = twosComp2dec(binArray(1,57:72)) * 2^(-5);
+        out.Ephemeris(ephemCount,:).deltan = twosComp2dec(binArray(1,73:88)) * 2^(-43) * gpsPi;
+        out.Ephemeris(ephemCount,:).M_0 = twosComp2dec(binArray(1,89:120)) * 2^(-31) * gpsPi;
+        out.Ephemeris(ephemCount,:).C_uc = twosComp2dec(binArray(1,121:136)) * 2^(-29);
         out.Ephemeris(ephemCount,:).e = bin2dec(binArray(1,137:168)) * 2^(-33);
-        out.Ephemeris(ephemCount,:).C_us = twoscomp(binArray(1,169:184)) * 2^(-29);
+        out.Ephemeris(ephemCount,:).C_us = twosComp2dec(binArray(1,169:184)) * 2^(-29);
         out.Ephemeris(ephemCount,:).sqrtA = bin2dec(binArray(1,185:216)) * 2^(-19);
         out.Ephemeris(ephemCount,:).t_oe = bin2dec(binArray(1,217:232)) * 2^(4);
         
@@ -237,15 +237,15 @@ for n = 1:length(structure)
             sf3Bin(19,:) sf3Bin(20,:) sf3Bin(21,:) sf3Bin(22,:) sf3Bin(23,:) sf3Bin(24,:) ...
             sf3Bin(25,:) sf3Bin(26,:) sf3Bin(27,:) sf3Bin(28,:) sf3Bin(29,:) sf3Bin(30,:)];
         
-        out.Ephemeris(ephemCount,:).C_ic = twoscomp(binArray(1,49:64)) * 2^(-29);
-        out.Ephemeris(ephemCount,:).omega_0 = twoscomp(binArray(1,65:96)) * 2^(-31) * gpsPi;
-        out.Ephemeris(ephemCount,:).C_is = twoscomp(binArray(1,97:112)) * 2^(-29);
-        out.Ephemeris(ephemCount,:).i_0 = twoscomp(binArray(1,113:144)) * 2^(-31) * gpsPi;
-        out.Ephemeris(ephemCount,:).C_rc = twoscomp(binArray(1,145:160)) * 2^(-5);
-        out.Ephemeris(ephemCount,:).omega = twoscomp(binArray(1,161:192)) * 2^(-31) * gpsPi;
-        out.Ephemeris(ephemCount,:).omegaDot = twoscomp(binArray(1,193:216)) * 2^(-43) * gpsPi;
+        out.Ephemeris(ephemCount,:).C_ic = twosComp2dec(binArray(1,49:64)) * 2^(-29);
+        out.Ephemeris(ephemCount,:).omega_0 = twosComp2dec(binArray(1,65:96)) * 2^(-31) * gpsPi;
+        out.Ephemeris(ephemCount,:).C_is = twosComp2dec(binArray(1,97:112)) * 2^(-29);
+        out.Ephemeris(ephemCount,:).i_0 = twosComp2dec(binArray(1,113:144)) * 2^(-31) * gpsPi;
+        out.Ephemeris(ephemCount,:).C_rc = twosComp2dec(binArray(1,145:160)) * 2^(-5);
+        out.Ephemeris(ephemCount,:).omega = twosComp2dec(binArray(1,161:192)) * 2^(-31) * gpsPi;
+        out.Ephemeris(ephemCount,:).omegaDot = twosComp2dec(binArray(1,193:216)) * 2^(-43) * gpsPi;
         out.Ephemeris(ephemCount,:).IODE_sf3 = bin2dec(binArray(1,217:224));
-        out.Ephemeris(ephemCount,:).iDot = twoscomp(binArray(1,225:238)) * 2^(-43) * gpsPi;
+        out.Ephemeris(ephemCount,:).iDot = twosComp2dec(binArray(1,225:238)) * 2^(-43) * gpsPi;
         
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         prnSaved(n) = prn;
@@ -258,7 +258,7 @@ end
 % chk = out.Ephemeris(:,:,1);
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Novatel pseudorange
-bag_sel = select(bag, 'Topic',topicPrefix + '/rawMeasurementsTagged');
+bag_sel = select(bag, 'Topic',strcat(topicPrefix, '/rawMeasurementsTagged'));
 structure = readMessages(bag_sel,'DataFormat','struct');
 
 for n = 1:length(structure)
@@ -316,13 +316,13 @@ end
 %%
 %%%%%%%%%%
     
-    topic = select(bag, 'Topic',topicPrefix + '/gpsTimeTagged');
+    topic = select(bag, 'Topic',strcat(topicPrefix ,'/gpsTimeTagged'));
     structure = readMessages(topic,'DataFormat', 'struct');
     out.gpsTimeTagged.time = cellfun(@(m) double(m.Header.Stamp.Sec) + double(m.Header.Stamp.Nsec)*1e-9,structure)';
     out.gpsTimeTagged.gpsWeek = cellfun(@(m) double(m.GpsTime.GpsWeek),structure)';
     out.gpsTimeTagged.gpsSeconds = cellfun(@(m) double(m.GpsTime.GpsSeconds),structure)';
    
-    topic = select(bag, 'Topic',topicPrefix + '/llhPositionTagged');
+    topic = select(bag, 'Topic',strcat(topicPrefix,'/llhPositionTagged'));
     structure = readMessages(topic,'DataFormat', 'struct');
     out.llhPositionTagged.time = cellfun(@(m) double(m.Header.Stamp.Sec) + double(m.Header.Stamp.Nsec)*1e-9,structure)';
     out.llhPositionTagged.gpsWeek = cellfun(@(m) double(m.Tags.GpsTime.GpsWeek),structure)';
@@ -334,7 +334,7 @@ end
     out.llhPositionTagged.verticalAccuracy = cellfun(@(m) double(m.LlhPosition.VerticalAccuracy),structure)';
 
     %TODO: Status, Covariances
-    topic = select(bag, 'Topic',topicPrefix + '/navSatFix');
+    topic = select(bag, 'Topic',strcat(topicPrefix, '/navSatFix'));
     structure = readMessages(topic,'DataFormat', 'struct');
     out.navSatFix.time = cellfun(@(m) double(m.Header.Stamp.Sec) + double(m.Header.Stamp.Nsec)*1e-9,structure)';
     out.navSatFix.latitude = cellfun(@(m) double(m.Latitude),structure)';
@@ -342,7 +342,7 @@ end
     out.navSatFix.altiude = cellfun(@(m) double(m.Altitude),structure)';
     
     % SV Positions
-    topic = select(bag, 'Topic',topicPrefix + '/svStateTagged');
+    topic = select(bag, 'Topic',strcat(topicPrefix,'/svStateTagged'));
     structure = readMessages(topic,'DataFormat', 'struct');
     prnCounter = 1;   % This should reset to one after every sampling period
     epochCounter = 1; % This should incrrease monotoincally via sampling period
@@ -380,7 +380,7 @@ end
    
 
     %TODO: covariances and rest of topics
-    topic = select(bag, 'Topic',topicPrefix + '/odom');
+    topic = select(bag, 'Topic',strcat(topicPrefix,'/odom'));
     structure = readMessages(topic,'DataFormat', 'struct');
     
     out.odom.Pose.X = cellfun(@(m) double(m.Pose.Pose.Position.X),structure)';

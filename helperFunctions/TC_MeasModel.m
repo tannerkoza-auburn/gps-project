@@ -20,7 +20,7 @@ function [dZ,H, R] = TC_MeasModel(Xin, SVpsr, psrSigma, SVdopp, doppSigma, SVpos
     - Xin: current state estimate (ECEF)
     - SVpsr: vector (n x 1) of pseudoranges
     - psrSigma: uncertainty in pseudoranges
-    - SVdopp: vector (n x 1) of doppler measurements   
+    - SVdopp: vector (n x 1) of doppler measurements  ( !!! in HZ !!! )
     - doppSigma: uncertainty in doppler measurements
     - SVpos: matrix (n x 3) of SV positions (ECEF) 
         ^ will be repeated for SVs with psr and dopp
@@ -37,7 +37,7 @@ function [dZ,H, R] = TC_MeasModel(Xin, SVpsr, psrSigma, SVdopp, doppSigma, SVpos
 nMeas = 2*length(SVpsr);
 
 % --- Constants
-c = 299792458; % Speed of light in m/s
+C = physconst('LightSpeed'); % Speed of light in m/s
 omega_ie = 7.292115E-5;  % Earth rotation rate in rad/s
 R_0 = 6378137; %WGS84 Equatorial radius in meters
 e = 0.0818191908425; %WGS84 eccentricity
@@ -49,6 +49,9 @@ estVel = Xin(4:6);
 estClkBias = Xin(7);
 estClkDrift = Xin(8);
 
+% convert dopps from Hz to m/s
+L1_freq = 1575.42e6;
+SVdopp = SVdopp * -( C/L1_freq );
 
 % Loop through available measurements at this epoch
 R = zeros(nMeas, nMeas);
@@ -58,8 +61,8 @@ for i = 1:nMeas/2
     rngHat = norm(SVpos(i,:)' - estPos);
 
     % frame rotation during measurement transit time using ( Groves 8.36 )
-    C_e_I = [1, omega_ie * rngHat / c, 0;...
-             -omega_ie * rngHat / c, 1, 0;...
+    C_e_I = [1, omega_ie * rngHat / C, 0;...
+             -omega_ie * rngHat / C, 1, 0;...
              0, 0, 1];
 
     % Predict pseudo-range using (9.165)

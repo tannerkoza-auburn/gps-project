@@ -18,21 +18,21 @@ for i = 1:numTopics
         case 'ros_sensor_msgs/GpsTimeTagged'
             for j = 1:numMes
                 % Message Time
-                out.gpsTime(j).msgTimeS = msg{j}.Header.Stamp.Sec;
-                out.gpsTime(j).msgTimeNS = msg{j}.Header.Stamp.Nsec;
+                out.gpsTime(j).msgTimeS = double(msg{j}.Header.Stamp.Sec);
+                out.gpsTime(j).msgTimeNS = double(msg{j}.Header.Stamp.Nsec);
                 out.gpsTime(j).msgTime = out.gpsTime(j).msgTimeS ...
                     + (out.gpsTime(j).msgTimeNS.*1e-9);
 
                 % GPS Time
-                out.gpsTime(j).gpsWeek = msg{j}.GpsTime.GpsWeek;
-                out.gpsTime(j).gpsS = msg{j}.GpsTime.GpsSeconds;
+                out.gpsTime(j).gpsWeek = double(msg{j}.GpsTime.GpsWeek);
+                out.gpsTime(j).gpsS = double(msg{j}.GpsTime.GpsSeconds);
             end
 
         case 'ros_sensor_msgs/GpsEphemerisTagged'
             for j = 1:numMes
                 % Message Time
-                temp.gpsEphem(j).msgTimeS = msg{j}.Header.Stamp.Sec;
-                temp.gpsEphem(j).msgTimeNS = msg{j}.Header.Stamp.Nsec;
+                temp.gpsEphem(j).msgTimeS = double(msg{j}.Header.Stamp.Sec);
+                temp.gpsEphem(j).msgTimeNS = double(msg{j}.Header.Stamp.Nsec);
                 temp.gpsEphem(j).msgTime = temp.gpsEphem(j).msgTimeS ...
                     + (temp.gpsEphem(j).msgTimeNS.*1e-9);
 
@@ -50,8 +50,8 @@ for i = 1:numTopics
         case 'ros_sensor_msgs/LlhPositionTagged'
             for j = 1:numMes
                 % Message Time
-                out.gpsLLA(j).msgTimeS = msg{j}.Header.Stamp.Sec;
-                out.gpsLLA(j).msgTimeNS = msg{j}.Header.Stamp.Nsec;
+                out.gpsLLA(j).msgTimeS = double(msg{j}.Header.Stamp.Sec);
+                out.gpsLLA(j).msgTimeNS = double(msg{j}.Header.Stamp.Nsec);
                 out.gpsLLA(j).msgTime = out.gpsLLA(j).msgTimeS ...
                     + (out.gpsLLA(j).msgTimeNS.*1e-9);
 
@@ -65,8 +65,8 @@ for i = 1:numTopics
             for j = 1:numMes
 
                 % Message Time
-                out.gpsRawObs(j).msgTimeS = msg{j}.Header.Stamp.Sec;
-                out.gpsRawObs(j).msgTimeNS = msg{j}.Header.Stamp.Nsec;
+                out.gpsRawObs(j).msgTimeS = double(msg{j}.Header.Stamp.Sec);
+                out.gpsRawObs(j).msgTimeNS = double(msg{j}.Header.Stamp.Nsec);
                 out.gpsRawObs(j).msgTime = out.gpsRawObs(j).msgTimeS ...
                     + (out.gpsRawObs(j).msgTimeNS.*1e-9);
 
@@ -140,7 +140,7 @@ for i = 1:numTopics
                 end
 
 
-                out.gpsSV(epochCtr).gpsSec(prnCtr) = msg{ii}.Tags.GpsTime.GpsSeconds;
+                out.gpsSV(epochCtr).gpsSec(prnCtr) = double(msg{ii}.Tags.GpsTime.GpsSeconds);
                 out.gpsSV(epochCtr).prn(prnCtr) = msg{ii}.SvState.Prn;
                 out.gpsSV(epochCtr).posX(prnCtr) = msg{ii}.SvState.Position.X;
                 out.gpsSV(epochCtr).posY(prnCtr) = msg{ii}.SvState.Position.Y;

@@ -5,44 +5,44 @@ close all
 
 %% Static Run
 
-static = load('static_rtk.mat');
+% static = load('static_rtk.mat');
+% 
+% figure
+% geoplot(static.data.lla(1,:),static.data.lla(2,:),'*')
+% geobasemap satellite
+% title('Static Rover RTK Truth')
+
+%% Dynamic Figure 8 Run
+
+dynamicF8 = load('figure8_rtk.mat');
 
 figure
-geoplot(static.data.lla(1,:),static.data.lla(2,:),'*')
-geobasemap satellite
-title('Static Rover RTK Truth')
-
-%% Dynamic Run
-
-dynamic = load('dynamic_rtk.mat');
-
-figure
-geoplot(dynamic.data.lla(1,:),dynamic.data.lla(2,:),'*')
+geoplot(dynamicF8.data.lla(1,:),dynamicF8.data.lla(2,:),'*')
 hold on
-geoplot(dynamic.data.lla(1,1),dynamic.data.lla(2,1),'g*')
-geoplot(dynamic.data.lla(1,end),dynamic.data.lla(2,end),'r*')
+geoplot(dynamicF8.data.lla(1,1),dynamicF8.data.lla(2,1),'g*')
+geoplot(dynamicF8.data.lla(1,end),dynamicF8.data.lla(2,end),'r*')
 geobasemap satellite
-title('Dynamic Rover RTK Truth')
+title('Dynamic Rover RTK Truth: Figure 8')
 legend('Dynamic Truth Position','Start Position','End Position', ...
     'Location','northwest')
 
-%% Dynamic 1 Side Run
+%% Dynamic Random Run
 
-dynamic1Side = load('dynamic_1side_rtk.mat');
+dynamicRand = load('random_rtk.mat');
 
 figure
-geoplot(dynamic1Side.data.lla(1,:),dynamic1Side.data.lla(2,:),'*')
+geoplot(dynamicRand.data.lla(1,:),dynamicRand.data.lla(2,:),'*')
 hold on
-geoplot(dynamic1Side.data.lla(1,1),dynamic1Side.data.lla(2,1),'g*')
-geoplot(dynamic1Side.data.lla(1,end),dynamic1Side.data.lla(2,end),'r*')
+geoplot(dynamicRand.data.lla(1,1),dynamicRand.data.lla(2,1),'g*')
+geoplot(dynamicRand.data.lla(1,end),dynamicRand.data.lla(2,end),'r*')
 geobasemap satellite
-title('Dynamic Rover RTK Truth: 1 Side')
+title('Dynamic Rover RTK Truth: Random')
 legend('Dynamic Truth Position','Start Position','End Position', ...
     'Location','northwest')
 
 %% Dynamic Bad Run
 
-dynamicBad = load('dynamic_bad_rtk.mat');
+dynamicBad = load('straight_line_bad_rtk.mat');
 
 figure
 geoplot(dynamicBad.data.lla(1,:),dynamicBad.data.lla(2,:),'*')

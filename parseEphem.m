@@ -22,7 +22,7 @@ for i = 1:numMes
 
     % Transit & Transmit Time
     transitTime = random.gpsRawObs(i).L1.psr/C;
-    transmitTime = random.gpsTime(i).gpsS - transitTime;
+    transmitTime = random.gpsTime(i).gpsS - transitTime -.045;
 
     % Preallocation
     svPos = zeros(3,numPRN);

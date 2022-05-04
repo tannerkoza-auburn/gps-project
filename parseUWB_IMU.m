@@ -121,8 +121,20 @@ kvh.gyro(:,3) = -cellfun(@(m) double(m.AngularVelocity.Z), kvh.struct);
 
 kvh.IMU = [kvh.time kvh.accel kvh.gyro];
 
+camIMU.select = select(bagMkz, 'Topic', '/vehicle/imu/data_raw');
+camIMU.struct = readMessages(camIMU.select, 'Dataformat', 'struct');
+camIMU.time = cellfun(@(m) double(m.Header.Stamp.Nsec)*10^-9 + ...
+    double(m.Header.Stamp.Sec), camIMU.struct);
+camIMU.accel(:,1) = cellfun(@(m) double(m.LinearAcceleration.X), camIMU.struct);
+camIMU.accel(:,2) = cellfun(@(m) double(m.LinearAcceleration.Y), camIMU.struct);
+camIMU.accel(:,3) = cellfun(@(m) double(m.LinearAcceleration.Z), camIMU.struct);
+camIMU.gyro(:,1) = cellfun(@(m) double(m.AngularVelocity.X), camIMU.struct);
+camIMU.gyro(:,2) = cellfun(@(m) double(m.AngularVelocity.Y), camIMU.struct);
+camIMU.gyro(:,3) = cellfun(@(m) double(m.AngularVelocity.Z), camIMU.struct);
 
-save('data/roverData/mats/figure8_IMU.mat', 'kvh', 'Mkz');
+camIMU.IMU = [camIMU.time camIMU.accel camIMU.gyro];
+
+save('data/roverData/mats/figure8_IMU.mat', 'kvh', 'Mkz', 'camIMU');
 
 
 %% --- sort IMU/UWB measurements in time:

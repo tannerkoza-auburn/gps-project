@@ -1,4 +1,4 @@
-function [X, P] = constVelTU(oldStates, Pin, configs, dt)
+function [X, P] = TC_ErrStateTimeUp(oldStates, Pin, f_ib_b, configs, dt)
 %{
     Tightly-couple IMU error state update (ECEF frame) based on Groves
     txtbook.
@@ -9,7 +9,7 @@ function [X, P] = constVelTU(oldStates, Pin, configs, dt)
 
 
 % extract inputs
-ECEFpos = oldStates.ECEF;
+ECEFpos = oldStates.pos;
 lat = oldStates.lat; % degrees
 lon = oldStates.lon; % degrees
 C_b2e = oldStates.C_b2e;
@@ -43,7 +43,7 @@ X = [zeros(15,1); clkBias + clkDrift*dt; clkDrift]; % closed-loop... zeroing out
 Phi = eye(17);
 Phi(1:3,1:3) = Phi(1:3,1:3) - Omega_ie * dt;
 Phi(1:3,13:15) = C_b2e * dt;
-Phi(4:6,1:3) = -dt * Skew(C_b2e * meas_f_ib_b);
+Phi(4:6,1:3) = -dt * Skew(C_b2e * f_ib_b);
 Phi(4:6,4:6) = Phi(4:6,4:6) - 2 * Omega_ie * dt;
 Phi(4:6,7:9) = -dt * 2 * GravModel_ECEF(ECEFpos) /...
     r_es_E * ECEFpos' / sqrt (ECEFpos' *...

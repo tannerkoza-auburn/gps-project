@@ -44,8 +44,8 @@ e = 0.0818191908425; %WGS84 eccentricity
 Omega_ie = Skew([0; 0; omega_ie]);
 
 % extract states
-estPos = oldStates.ECEF;
-estVel = oldStates.ECEFvel;
+estPos = oldStates.pos; % ECEF
+estVel = oldStates.vel;
 estClkBias = oldStates.clkBias;
 estClkDrift = oldStates.clkDrift;
 

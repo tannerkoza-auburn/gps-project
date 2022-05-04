@@ -1,2 +1,4 @@
 # IGNORE ASV's
 *.asv
+*.bin
+*.bag

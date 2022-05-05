@@ -2,24 +2,42 @@
     Testing the results of ECEF Mechanization with kvh data from car
 %}
 clear all; close all; clc;
-load('figure8_IMU.mat');
-
-% KVH bias est:
-aBias = [mean(kvh.IMU(1:50,2:3))'; 0];
-gBias = mean(kvh.IMU(1:50,5:7))';
-
+load('classIMU.mat');
+load('RCVR1.mat');
 
 
 
 
 %% Init
+rcvr1 = gnssReceiver();
+psr1 = RCVR1{1}.L1.psr;
+dopp1 = RCVR1{1}.L1.dopp;
+svPos1 = RCVR1{1}.L1.svPos;
+svVel1 = RCVR1{1}.L1.svVel;
+clkCorr1 = RCVR1{1}.L1.clkCorr;
+est1 = rcvr1.pv3D(psr1,dopp1,svPos1,svVel1,clkCorr1, 1);
 
-%----- init ECEF
-lla = ecef2lla(Mkz.gpsECEF(1,2:4)); % init lla
-pos(:,1) = Mkz.gpsECEF(1,2:4)'; 
-vel(:,1) = [0;0;0];
+for i = 1:length(RCVR1)
+    psr1 = RCVR1{i}.L1.psr;
+    dopp1 = RCVR1{i}.L1.dopp;
+    svPos1 = RCVR1{i}.L1.svPos;
+    svVel1 = RCVR1{i}.L1.svVel;
+    clkCorr1 = RCVR1{i}.L1.clkCorr;
+    est(i) = rcvr1.pv3D(psr1,dopp1,svPos1,svVel1,clkCorr1, 1);
+    
+    gpsVel(:,i) = est(i).vel;
+end 
+
+% init state vector
+pos(:,1) = est1.pos';
+vel(:,1) = est1.vel;
+clkBias(1) = est1.clock_bias;
+clkDrift(1) = est1.clock_drfit;
+X(:,1) = [pos; vel; clkBias(1); clkDrift(1)];
+
+lla = ecef2lla(est1.pos'); % init lla
 % init rotation matrix C_b2e
-Eul(:,1) = [0; 0; Mkz.gpsHeading(1,2)]; % import init heading in deg
+Eul(:,1) = [0; 0; -90]; % import init heading in deg
 [C_n2b, C_b2n(:,:,1)] = NED_to_Body(Eul);
 [C_n2e] = NED_to_ECEF(lla(1), lla(2));
 C_b2e(:,:,1) = C_n2e*C_b2n;
@@ -30,6 +48,12 @@ vNED(:,1) = [0; 0; 0];
 lat(1) = lla(1);
 lon(1) = lla(2);
 h(1) = lla(3);
+
+
+
+%% TUNING
+P(:,:,1) = est1.P;
+Q = 100*eye(8,8);
 
 
 %% Main Loop
@@ -44,7 +68,7 @@ for i = 1:length(kvh.IMU)
     oldPVA.C_b2e = C_b2e(:,:,i);
     
     % extract meas and find dt:
-    f_ib_b = kvh.IMU(i,2:4)' - aBias;
+    f_ib_b = kvh.IMU(i,2:4)'; %  - aBias;
     omega_ib_b = kvh.IMU(i,5:7)';
     dt = kvh.IMU(i,1) - kvh.IMU(max([i-1,1]),1);
     
@@ -64,10 +88,13 @@ lla_out = ecef2lla(pos');
 
 figure()
 geoplot(lla_out(:,1), lla_out(:,2), '*')
+hold on 
+geoplot(lat, lon, '*')
 geobasemap satellite
 
 figure()
 geoplot(lat, lon, '*')
+hold on
 geobasemap satellite
 
 figure()
@@ -75,9 +102,9 @@ plot(mis_est(1,:))
 hold on
 plot(mis_est(2,:))
 plot(mis_est(3,:))
-
-figure()
-plot(Mkz.gpsHeading(:,1), Mkz.gpsHeading(:,2))
+% 
+% figure()
+% plot(Mkz.gpsHeading(:,1), Mkz.gpsHeading(:,2))
 
 
 figure()

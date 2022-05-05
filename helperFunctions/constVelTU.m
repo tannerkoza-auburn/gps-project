@@ -15,7 +15,7 @@ z31 = zeros(3,1);
 F = [z3     i3      z31     z31;
      z3     z3      z31     z31;
      z31'    z31'     0       1;
-     z31'    z31'     0       1];  
+     z31'    z31'     0       0];  
 
  % discretize state transition matrix
 Phi = eye(8) + F*dt;

@@ -5,18 +5,18 @@
     [del_Psi del_Vel del_Pos aBias gBias clkBias clkDrift]
 %}
 clear all; close all; clc;
-load('figure8_CombinedMats.mat');
-load('figure8_IMU.mat'); % includes Mkz which provides heading and RTK
+load('classData_CombinedMats')
 
 % select KVH or cam IMU (default KVH)
-cam = 0;
+% cam = 0;
 timeSort = timeSortKVH;
-imu.IMU = kvh.IMU;
-if cam
-    timeSort = timeSortCam;
-    imu.IMU = camIMU.IMU;
-    IMUmat = camIMUmat;
-end 
+% imu.IMU = kvh.IMU;
+% if cam
+%     timeSort = timeSortCam;
+%     imu.IMU = camIMU.IMU;
+%     IMUmat = camIMUmat;
+% end 
+imu.IMU = IMUmat;
 
 % KVH bias est:
 aBias(:,1) = [mean(IMUmat(1:50,2:3))'; 0];
@@ -67,7 +67,7 @@ pos(:,1) = gpsSol(i).pos';
 vel(:,1) = [0;0;0];
 
 % init rotation matrix C_b2e
-Eul(:,1) = [0; 0; Mkz.gpsHeading(1,2)]; % import init heading in deg
+Eul(:,1) = [0; 0; -90]; % import init heading in deg
 [C_n2b, C_b2n(:,:,1)] = NED_to_Body(Eul);
 [C_n2e] = NED_to_ECEF(gpslla(1,1), gpslla(1,2));
 C_b2e(:,:,1) = C_n2e*C_b2n;
@@ -151,7 +151,6 @@ for i = 1:1000  %length(timeSort)
         imuIdx = imuIdx + 1;
         
     end 
-    
     
     if measUpdate
    

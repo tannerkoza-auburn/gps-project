@@ -9,6 +9,8 @@ clear; clc; close all;
 load('figure8_CombinedMats.mat'); % novatel on car
 load('figure8_rtk.mat'); % rtk data;
 
+
+
 %% INIT
 % Init with initial GPS solution:
 r = gnssReceiver();
@@ -17,8 +19,9 @@ for i = 1:length(svMat(:))
     gpsSol(i) = r.pv3D(svMat(i).psr, svMat(i).dopp, svMat(i).svPos,...
     svMat(i).svVel, svMat(i).clkCorr, 1);
     gpslla(i,:) = ecef2lla(gpsSol(i).pos');
-end 
+end
 
+svMat = svUWB_Mat;
 
 % init state vector
 pos(:,1) = gpsSol(1).pos';
@@ -31,7 +34,7 @@ X(:,1) = [pos; vel; clkBias(1); clkDrift(1)];
 
 %% TUNING
 P(:,:,1) = gpsSol(1).P;
-Q = 1*eye(8,8);
+Q = 10*eye(8,8);
 
 
 %% Main Loop

@@ -1,4 +1,4 @@
 [submodule "gps-receiver"]
 	path = gps-receiver
-	url = git@github.com:tannerkoza/gnss-receiver.git
+	url = git@github.com:tannerkoza-auburn/gps-receiver.git
 	branch = main

@@ -1,6 +1,6 @@
 # gps-project
 
-gps-project contains a project related to the Fundamentals of GPS Navigation (MECH 6970) course at Auburn University.
+***gps-project*** contains a project related to the Fundamentals of GPS Navigation (MECH 6970) course at Auburn University.
 
 ## License
 
